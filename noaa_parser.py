@@ -4,6 +4,7 @@ import re
 from io import StringIO
 import pandas as pd
 
+
 def get_data():
     # the NOAA website we'll get the aurora forecast from:
     link = "https://services.swpc.noaa.gov/text/3-day-forecast.txt"
