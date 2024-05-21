@@ -1,6 +1,6 @@
-from smtplib import SMTP, SMTPException
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from smtplib import SMTP, SMTPException
 
 
 class SmtpMail:

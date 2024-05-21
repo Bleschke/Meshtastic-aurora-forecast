@@ -1,10 +1,11 @@
 from datetime import datetime
-from smtp_mail import SmtpMail
-from sendgrid_mail import SendgridMail
+
 from noaa_parser import get_data
+from sendgrid_mail import SendgridMail
+from smtp_mail import SmtpMail
 
 # Kp value threshold from when to send an email
-KP_THRESHOLD = 5  # noqa
+KP_THRESHOLD = 5
 
 # specify email here
 recipient_emails = [
@@ -26,7 +27,7 @@ def get_forecast(add_timestamp=False):
     # find the max Kp value over the next 3 days:
     max_value = df['value'].max()
     # If the forecast Kp index will be equal to or above threshold at any point in the next 3 days,
-    # send an email alert using the service(s) specified above:
+    # send an email alert using the service specified above:
     if max_value >= KP_THRESHOLD:
         email_content = ("\nAt " + str(df.iloc[0]['time']) + ' on ' + str(df.iloc[0]['variable']) +
                          ' the Kp index is forecast to be ' + str(df.iloc[0]['value']) + '!' +
@@ -39,5 +40,6 @@ def get_forecast(add_timestamp=False):
     return max_value
 
 
+# if this script is run, run the forecast function
 if __name__ == "__main__":
     get_forecast()
