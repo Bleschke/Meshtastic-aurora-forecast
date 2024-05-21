@@ -6,13 +6,14 @@ from urllib.error import URLError
 
 
 def run_get_forecast():
-    max_value = get_forecast()
+    max_value = get_forecast(add_timestamp=True)
     print(f"ran script at {datetime.now()}, max value was {max_value}")
 
 
-# set at which time(s) the get_forecast script shall run
-schedule.every().day.at("06:00:00").do(run_get_forecast)
-# schedule.every().day.at("18:00:00").do(run_get_forecast)
+run_get_forecast()
+# set at which time(s) the get_forecast script shall run (UTC)
+schedule.every().day.at("04:00:00").do(run_get_forecast)
+schedule.every().day.at("16:00:00").do(run_get_forecast)
 
 while True:
     try:

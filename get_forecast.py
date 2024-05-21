@@ -22,22 +22,25 @@ email_services = [
 ]
 
 
-def get_forecast():
+def get_forecast(add_timestamp=False):
     # get the data from NOAA website
     df = get_data()
     # find the max Kp value over the next 3 days:
     max_value = df['value'].max()
-    print(f"max={max_value}")
     # If the forecast Kp index will be equal to or above threshold at any point in the next 3 days,
     # send an email alert using the service(s) specified above:
     if max_value >= KP_THRESHOLD:
         email_content = ("\nAt " + str(df.iloc[0]['time']) + ' on ' + str(df.iloc[0]['variable']) +
                          ' the Kp index is forecast to be ' + str(df.iloc[0]['value']) + '!' +
-                         '\n\n\nFor more details, visit:\n\n' + 'https://services.swpc.noaa.gov/text/3-day-forecast.txt')
+                         '\n\n\nFor more details, visit:\n\n' +
+                         'https://services.swpc.noaa.gov/text/3-day-forecast.txt')
+        if add_timestamp:
+            email_content = email_content + f'\n\nReport created on {str(datetime.now()).split('.')[0]}UT'
         for endpoint in email_services:
             for address in recipient_emails:
                 endpoint.send_msg(address, email_topic, email_content)
     return max_value
+
 
 if __name__ == "__main__":
     get_forecast()
