@@ -1,7 +1,7 @@
+from datetime import datetime
 from smtp_mail import SmtpMail
 from sendgrid_mail import SendgridMail
 from noaa_parser import get_data
-
 
 # Kp value threshold from when to send an email
 KP_THRESHOLD = 5  # noqa
@@ -15,11 +15,9 @@ sender_email = 'YOUR SENDER EMAIL GOES HERE'
 sender_name = 'YOUR NAME'
 email_topic = "Aurora forecast"
 
-# add the email send functions (sendgrid and/or SMTP)
-email_services = [
-    SmtpMail("SMTP HOST GOES HERE (ip/url)", "SMTP PORT GOES HERE", "SMTP PASSWORD GOES HERE", sender_email, sender_name),
-    SendgridMail('INPUT YOUR SENDGRID API KEY HERE', sender_email)
-]
+# add the email send function (sendgrid or SMTP)
+email_service = SendgridMail('INPUT YOUR SENDGRID API KEY HERE', sender_email)
+# email_service = SmtpMail("SMTP HOST (ip/url)", "SMTP PORT", "SMTP PASSWORD", sender_email, sender_name)
 
 
 def get_forecast(add_timestamp=False):
@@ -35,10 +33,9 @@ def get_forecast(add_timestamp=False):
                          '\n\n\nFor more details, visit:\n\n' +
                          'https://services.swpc.noaa.gov/text/3-day-forecast.txt')
         if add_timestamp:
-            email_content = email_content + f'\n\nReport created on {str(datetime.now()).split('.')[0]}UT'
-        for endpoint in email_services:
-            for address in recipient_emails:
-                endpoint.send_msg(address, email_topic, email_content)
+            email_content = email_content + f'\n\nReport created on {str(datetime.now()).split(".")[0]}UT'
+        for address in recipient_emails:
+            email_service.send_msg(address, email_topic, email_content)
     return max_value
 
 
